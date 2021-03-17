@@ -20,14 +20,24 @@ public class StopwatchSwing implements Observer {
 
     StopwatchSwing()
     {
+        initializeJFrame();
+        setUpPanels();
+        addButtonListeners();
+        initializeStates();
+        frame.setVisible(true);
+    }
 
+    public void initializeJFrame()
+    {
         // Initializing the JFrame
         frame = new JFrame("Stopwatch");
         frame.setSize(300,300);
         frame.setMinimumSize(new Dimension(300,300));
         frame.setLayout(new GridLayout(2,1));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    }
+    public void setUpPanels()
+    {
         // Setting Up Panels
         panel1 = new JPanel();
         panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
@@ -49,10 +59,9 @@ public class StopwatchSwing implements Observer {
 
         frame.add(panel1);
         frame.add(panel2);
-
-        frame.setVisible(true);
-
-
+    }
+    public void addButtonListeners()
+    {
         // Adding Listeners to the Buttons
 
         start.addActionListener(new ActionListener() {
@@ -68,7 +77,10 @@ public class StopwatchSwing implements Observer {
                 handleStopPress();
             }
         });
+    }
 
+    public void initializeStates()
+    {
         // Initializing states
         notRunningState = new NotRunningStopwatchState(this);
         runningState = new RunningStopwatchState(this);
@@ -76,7 +88,6 @@ public class StopwatchSwing implements Observer {
         stopPressedState = new StopPressedStopwatchState(this);
         currentState=stopPressedState;
         currentState.execute();
-
     }
 
     private void handleStartPress() {

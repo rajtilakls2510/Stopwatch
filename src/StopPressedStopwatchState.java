@@ -15,7 +15,7 @@ public class StopPressedStopwatchState implements StopwatchState{
 
     @Override
     public void handleUI() {
-        stopwatchSwing.timerDisplay.setText("Time: 00:000");
+        stopwatchSwing.timerDisplay.setText("Time: "+ stopwatchSwing.formatTime(0L));
         stopwatchSwing.start.setText("Start");
         stopwatchSwing.stop.setVisible(false);
     }
