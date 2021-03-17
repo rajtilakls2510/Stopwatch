@@ -1,8 +1,9 @@
 
-public class Stopwatch
+public class Stopwatch implements Runnable
 {
     private long offset, currentStart;
     private boolean isStopped;
+    private Thread th;
 
     public Stopwatch()
     {
@@ -15,6 +16,8 @@ public class Stopwatch
     {
         if(isStopped)
         {
+            th = new Thread(this);
+            th.start();
             currentStart = System.currentTimeMillis() - offset;
         }
 
@@ -25,6 +28,7 @@ public class Stopwatch
     {
         if(!isStopped)
         {
+            th = null;
             offset = System.currentTimeMillis() - currentStart;
         }
         isStopped = true;
@@ -36,5 +40,18 @@ public class Stopwatch
             return System.currentTimeMillis() - currentStart;
         else
             return offset;
+    }
+
+    @Override
+    public void run() {
+        while(!isStopped)
+        {
+            System.out.print("\rTime: "+ getTime());
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
