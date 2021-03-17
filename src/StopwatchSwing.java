@@ -5,18 +5,32 @@ import java.awt.event.ActionListener;
 
 public class StopwatchSwing implements Observer {
 
+    // Stopwatch App
+
+    /** Patterns Implemented:
+     * Observer: For receiving updates from the stopwatch class,
+     * State: User Pressing different buttons changes the state of the app,
+     * Template: The default execution of the state methods is in the state interface(StopwatchState)
+     */
+
+    // Stopwatch
     Stopwatch sw;
+
+    // UI Widgets
     JFrame frame;
     JPanel panel1, panel2;
     JLabel timerDisplay;
     JButton start, stop;
 
+    // States
     StopwatchState notRunningState;
     StopwatchState runningState;
     StopwatchState pausedState;
     StopwatchState stopPressedState;
 
     StopwatchState currentState;
+
+    // <-------------------- Initializer Methods ------------------->
 
     StopwatchSwing()
     {
@@ -90,6 +104,8 @@ public class StopwatchSwing implements Observer {
         currentState.execute();
     }
 
+    // <-------------------- Listener Methods ------------------->
+
     private void handleStartPress() {
         currentState.execute();
 
@@ -98,6 +114,15 @@ public class StopwatchSwing implements Observer {
         currentState = stopPressedState;
         currentState.execute();
     }
+
+    // <-------------------- Timer Update Methods ------------------->
+
+    @Override
+    public void update(long time) {
+        timerDisplay.setText("Time: "+formatTime(time));
+    }
+
+    // <-------------------- Accessor Methods ------------------->
 
     public void setState(StopwatchState stopwatchState)
     {
@@ -118,16 +143,7 @@ public class StopwatchSwing implements Observer {
         return pausedState;
     }
 
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new StopwatchSwing();
-            }
-        });
-    }
+    // <-------------------- More Helper Methods ------------------->
 
     String formatTime(long time)
     {
@@ -151,8 +167,18 @@ public class StopwatchSwing implements Observer {
         return formattedTime;
 
     }
-    @Override
-    public void update(long time) {
-        timerDisplay.setText("Time: "+formatTime(time));
+
+    // <-------------------- Main ------------------->
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new StopwatchSwing();
+            }
+        });
     }
+
+
+
 }
