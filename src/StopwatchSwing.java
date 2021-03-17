@@ -10,14 +10,22 @@ public class StopwatchSwing implements Observer {
     JPanel panel1, panel2;
     JLabel timerDisplay;
     JButton start, stop;
-    final int NOT_RUNNING=0, RUNNING=1, PAUSED=2;
-    int currentState;
+
+
+    StopwatchState notRunningState;
+    StopwatchState runningState;
+    StopwatchState pausedState;
+
+    StopwatchState currentState;
 
     StopwatchSwing()
     {
-        currentState=NOT_RUNNING;
-        sw = new Stopwatch();
-        sw.registerObserver(this);
+        // Initializing states
+        notRunningState = new NotRunningStopwatchState(this);
+        runningState = new RunningStopwatchState(this);
+        pausedState = new PausedStopwatchState(this);
+        currentState=notRunningState;
+
 
         // Initializing the JFrame
         frame = new JFrame("Stopwatch");
@@ -71,38 +79,33 @@ public class StopwatchSwing implements Observer {
     }
 
     private void handleStartPress() {
-        if(currentState==NOT_RUNNING)
-        {
-            sw =  new Stopwatch();
-            sw.registerObserver(this);
-            sw.start();
-            start.setText("Pause");
-            stop.setVisible(true);
-            currentState=RUNNING;
-        }
-        else if(currentState==RUNNING)
-        {
-            sw.stop();
-            start.setText("Resume");
-            currentState=PAUSED;
-        }
-        else if(currentState==PAUSED)
-        {
-            sw.start();
-            start.setText("Pause");
-            currentState=RUNNING;
-        }
+        currentState.execute();
 
     }
     private void handleStopPress(){
-        if(sw!=null)
-            sw.stop();
-        sw = null;
-        timerDisplay.setText("Time: "+formatTime(0L));
-        start.setText("Start");
-        stop.setVisible(false);
-        currentState=NOT_RUNNING;
+
     }
+
+    public void setState(StopwatchState stopwatchState)
+    {
+        currentState = stopwatchState;
+    }
+    public void setStopwatch(Stopwatch sw){
+        this.sw = sw;
+    }
+    public StopwatchState getNotRunningState() {
+        return notRunningState;
+    }
+
+    public StopwatchState getRunningState() {
+        return runningState;
+    }
+
+    public StopwatchState getPausedState() {
+        return pausedState;
+    }
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
