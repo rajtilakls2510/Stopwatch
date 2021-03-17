@@ -1,15 +1,19 @@
+import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Stopwatch implements Runnable
+public class Stopwatch implements Runnable, Observable
 {
     private long offset, currentStart;
     private boolean isStopped;
     private Thread th;
+    private ArrayList<Observer> observers;
 
     public Stopwatch()
     {
         offset = 0L;
         currentStart = System.currentTimeMillis();
         isStopped = true;
+        observers = new ArrayList<>();
     }
 
     public void start()
@@ -46,12 +50,27 @@ public class Stopwatch implements Runnable
     public void run() {
         while(!isStopped)
         {
-            System.out.print("\rTime: "+ getTime());
+            notifyObservers();
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void registerObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        Iterator<Observer> iter = observers.iterator();
+        while(iter.hasNext())
+        {
+            Observer o = iter.next();
+            o.update(getTime());
         }
     }
 }

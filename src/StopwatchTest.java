@@ -3,6 +3,8 @@
 public class StopwatchTest {
     public static void main(String[] args) {
         Stopwatch sw = new Stopwatch();
+        StopwatchObserver ob = new StopwatchObserver();
+        sw.registerObserver(ob);
 
         System.out.println("\nStarting Stopwatch: ");
         sw.start();
@@ -28,4 +30,6 @@ public class StopwatchTest {
             e.printStackTrace();
         }
     }
+
+
 }
