@@ -11,21 +11,15 @@ public class StopwatchSwing implements Observer {
     JLabel timerDisplay;
     JButton start, stop;
 
-
     StopwatchState notRunningState;
     StopwatchState runningState;
     StopwatchState pausedState;
+    StopwatchState stopPressedState;
 
     StopwatchState currentState;
 
     StopwatchSwing()
     {
-        // Initializing states
-        notRunningState = new NotRunningStopwatchState(this);
-        runningState = new RunningStopwatchState(this);
-        pausedState = new PausedStopwatchState(this);
-        currentState=notRunningState;
-
 
         // Initializing the JFrame
         frame = new JFrame("Stopwatch");
@@ -38,7 +32,7 @@ public class StopwatchSwing implements Observer {
         panel1 = new JPanel();
         panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
 
-        timerDisplay = new JLabel("Time: "+formatTime(0L));
+        timerDisplay = new JLabel();
         Font font = timerDisplay.getFont();
         timerDisplay.setFont(new Font(font.getFontName(), font.getStyle(), 18));
 
@@ -75,6 +69,13 @@ public class StopwatchSwing implements Observer {
             }
         });
 
+        // Initializing states
+        notRunningState = new NotRunningStopwatchState(this);
+        runningState = new RunningStopwatchState(this);
+        pausedState = new PausedStopwatchState(this);
+        stopPressedState = new StopPressedStopwatchState(this);
+        currentState=stopPressedState;
+        currentState.execute();
 
     }
 
@@ -83,7 +84,8 @@ public class StopwatchSwing implements Observer {
 
     }
     private void handleStopPress(){
-
+        currentState = stopPressedState;
+        currentState.execute();
     }
 
     public void setState(StopwatchState stopwatchState)
